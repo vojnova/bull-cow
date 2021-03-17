@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+//Route::get('/new-game', 'App\Http\Controllers\GameController@generateNumber');
+Route::get('/new-game', [\App\Http\Controllers\GameController::class, 'generateNumber']);
+
+Route::get('/check/{guess}', [\App\Http\Controllers\GameController::class, 'checkNumber']);
