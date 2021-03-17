@@ -27,7 +27,7 @@ class GameController extends Controller
         $number = session('number');
         $arr = session('arr');
         if (!$number || !$arr) {
-            return response("No game!", 400);
+            return response("Няма започната игра!", 400);
         }
         if ($number == $guess) {
             return response('win');
@@ -38,7 +38,7 @@ class GameController extends Controller
         for ($i = 0; $i < 4; $i++) {
             $guessArr[$guess[$i]]++;
             if ($guessArr[$guess[$i]] > 1) {
-                return response('non unique!', 400);
+                return response('Има дублиращи се цифри!', 400);
             }
             if ($arr[$guess[$i]] > 0) {
                 if ($arr[$guess[$i]] == $i+1) {

@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/game', function () {
+    return view('game');
+});
+
 //Route::get('/new-game', 'App\Http\Controllers\GameController@generateNumber');
 Route::get('/new-game', [\App\Http\Controllers\GameController::class, 'generateNumber']);
 
