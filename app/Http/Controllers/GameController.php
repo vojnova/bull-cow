@@ -6,12 +6,19 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function generateNumber(Request $request) {
+    public function newGame(Request $request) {
         $name = $request->has('name') ? $request->input('name') : session('name');
         if (!$name) {
             return response('Играчът няма име!', 400);
         }
         session(['name' => $name]);
+        $this->generateNumber();
+        echo session('number');
+        print_r(session('arr'));
+        return true;
+    }
+
+    private function generateNumber() {
         $str = '0123456789';
         $number = '';
         $arr = array_fill(0, 10, 0);
@@ -21,11 +28,60 @@ class GameController extends Controller
             $arr[$str[$rand]] = $i;
             $str = str_replace($str[$rand], '', $str);
         }
+        $this->applyCustomRules($number, $arr);
         session(['number' => $number, 'arr' => $arr, 'tries' => 0]);
-        echo session('number');
-        print_r(session('arr'));
-        session()->save();
-        return true;
+    }
+
+    private function applyCustomRules(&$number, &$arr) {
+        $problems = 0;
+        $oneEight = false;
+        $four = false;
+        $five = false;
+        if ($arr[1] && $arr[8] && abs($arr[1] - $arr[8]) > 1) {
+            $problems++;
+            $oneEight = true;
+        }
+        if ($arr[4] && $arr[4] % 2 == 0) {
+            $problems++;
+            $four = true;
+        }
+        if ($arr[5] && $arr[5] % 2 == 0) {
+            $problems++;
+            $five = true;
+        }
+        if ($problems > 2) {
+            $this->generateNumber();
+        }
+        if ($oneEight) {
+            $index8 = $arr[8] - 1;
+            $index1 = $arr[1] - 1;
+            $newIndex = $arr[1] < $arr[8] ? $index1 + 1 : $index1 - 1;
+            $temp = $number[$newIndex];
+            $number[$newIndex] = $number[$index8];
+            $number[$index8] = $temp;
+            $arr[8] = $newIndex + 1;
+            $arr[$temp] = $index8 + 1;
+        }
+        if ($four) {
+            $index4 = $arr[4] - 1;
+            $newIndex = (!$oneEight || ($number[$index4-1] != 1 && $number[$index4-1] != 8)) ?
+                $index4 - 1 : (($index4 - 3 > 0) ? $index4 - 3 : $index4 + 1);
+            $temp = $number[$newIndex];
+            $number[$newIndex] = $number[$index4];
+            $number[$index4] = $temp;
+            $arr[4] = $newIndex + 1;
+            $arr[$temp] = $index4 + 1;
+        }
+        if ($five) {
+            $index5 = $arr[5] - 1;
+            $newIndex = (!$oneEight || ($number[$index5-1] != 1 && $number[$index5-1] != 8)) ?
+                $index5 - 1 : (($index5 - 3 > 0) ? $index5 - 3 : $index5 + 1);
+            $temp = $number[$newIndex];
+            $number[$newIndex] = $number[$index5];
+            $number[$index5] = $temp;
+            $arr[5] = $newIndex + 1;
+            $arr[$temp] = $index5 + 1;
+        }
     }
 
     public function checkNumber($guess) {

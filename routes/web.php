@@ -22,7 +22,7 @@ Route::get('/game', function () {
 });
 
 //Route::get('/new-game', 'App\Http\Controllers\GameController@generateNumber');
-Route::post('/new-game', [\App\Http\Controllers\GameController::class, 'generateNumber']);
+Route::post('/new-game', [\App\Http\Controllers\GameController::class, 'newGame']);
 
 Route::get('/check/{guess}', [\App\Http\Controllers\GameController::class, 'checkNumber']);
 
