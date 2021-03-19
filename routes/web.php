@@ -29,3 +29,5 @@ Route::get('/check/{guess}', [\App\Http\Controllers\GameController::class, 'chec
 Route::get('/give-up', [\App\Http\Controllers\GameController::class, 'giveUp']);
 
 Route::get('/edit-name/{name}', [\App\Http\Controllers\GameController::class, 'editName']);
+
+Route::get('/get-top/{category}', [\App\Http\Controllers\GameController::class, 'getTop']);

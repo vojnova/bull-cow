@@ -32,7 +32,7 @@
     <script type="text/javascript" src="/js/game.js"></script>
 {{--    <script src="{{asset('public/js/app.js')}}"></script>--}}
 </head>
-<body>
+<body onload="getTopLists()">
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid justify-content-between">
         <span class="navbar-brand">Бикове и крави</span>
@@ -60,11 +60,27 @@
         <div class="card-body">
             <h3 class="card-title">Опитайте се да познаете числото, като въведете 4 уникални цифри:</h3>
             <form class="input-group mb-3" onsubmit="event.preventDefault(); guessNumber()" id="play-form">
-                <input class="form-control" type="text" maxlength="4" pattern="[0-9]{4}" id="guess">
+                <input class="form-control" type="text" maxlength="4" pattern="^(?:([0-9])(?!.*\1)){4}$" id="guess" required>
                 <button class="btn btn-success" type="submit">Познай</button>
                 <button class="btn btn-danger" type="button" onclick="giveUp()">Предавам се</button>
             </form>
             <div id="results" class="card-text"></div>
+        </div>
+    </div>
+    <div style="display: flex; flex-direction: column">
+        <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-header">Класиране по брой опити:</div>
+            <div class="card-body">
+                <h5 class="card-title">Топ 10</h5>
+                <ol class="card-text" id="top-tries-list"></ol>
+            </div>
+        </div>
+        <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
+            <div class="card-header">Класиране по време:</div>
+            <div class="card-body">
+                <h5 class="card-title">Топ 10</h5>
+                <ol class="card-text" id="top-time-list"></ol>
+            </div>
         </div>
     </div>
 </main>

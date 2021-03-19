@@ -1,3 +1,7 @@
+main {
+    display: flex;
+}
+
 #enter-name, #play {
     margin: auto;
 }

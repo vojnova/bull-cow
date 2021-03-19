@@ -31,12 +31,14 @@ function guessNumber() {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             console.log(this.response);
-            if (this.responseText === 'win') {
+            let res = JSON.parse(this.response);
+            if (res.win === true) {
                 let notice = document.createElement('div');
                 notice.classList.add('alert', 'alert-success');
-                notice.innerText = 'Поздравления! Познахте числото ' + number + '.';
+                notice.innerText = 'Поздравления! Познахте числото ' + number + ' с ' + res.tries + ' опита.';
                 document.getElementById('results').prepend(notice);
                 document.getElementById('play-form').hidden = true;
+                getTopLists();
             }
             else {
                 let par = document.createElement('p');
@@ -100,4 +102,26 @@ function editName(submit = false) {
         xhttp.open('GET', 'edit-name/' + name);
         xhttp.send();
     }
+}
+
+function getTopLists() {
+    getTopTries();
+}
+
+function getTopTries() {
+    let ol = document.getElementById('top-tries-list');
+    ol.innerHTML = '';
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            let res = JSON.parse(this.response);
+            for (let item of res) {
+                let li = document.createElement('li');
+                li.innerText = item.name + ' - ' + item.tries;
+                ol.append(li);
+            }
+        }
+    }
+    xhttp.open('GET', 'get-top/tries');
+    xhttp.send();
 }
