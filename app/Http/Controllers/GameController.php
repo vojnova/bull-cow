@@ -6,7 +6,12 @@ use Illuminate\Http\Request;
 
 class GameController extends Controller
 {
-    public function generateNumber() {
+    public function generateNumber(Request $request) {
+        $name = $request->has('name') ? $request->input('name') : session('name');
+        if (!$name) {
+            return response('Играчът няма име!', 400);
+        }
+        session(['name' => $name]);
         $str = '0123456789';
         $number = '';
         $arr = array_fill(0, 10, 0);
@@ -50,5 +55,19 @@ class GameController extends Controller
             }
         }
         return response(['bulls' => $bulls, 'cows' => $cows]);
+    }
+
+    public function giveUp() {
+        $number = session('number');
+        session()->forget(['number', 'arr']);
+        return $number;
+    }
+
+    public function editName($name) {
+        if (trim($name)) {
+            session(['name' => $name]);
+            return session('name');
+        }
+        return response('Не може да оставите името празно!', 400);
     }
 }

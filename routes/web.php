@@ -22,6 +22,10 @@ Route::get('/game', function () {
 });
 
 //Route::get('/new-game', 'App\Http\Controllers\GameController@generateNumber');
-Route::get('/new-game', [\App\Http\Controllers\GameController::class, 'generateNumber']);
+Route::post('/new-game', [\App\Http\Controllers\GameController::class, 'generateNumber']);
 
 Route::get('/check/{guess}', [\App\Http\Controllers\GameController::class, 'checkNumber']);
+
+Route::get('/give-up', [\App\Http\Controllers\GameController::class, 'giveUp']);
+
+Route::get('/edit-name/{name}', [\App\Http\Controllers\GameController::class, 'editName']);
