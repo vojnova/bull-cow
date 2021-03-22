@@ -8,7 +8,7 @@ function newGame() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            console.log(this.response);
+            // console.log(this.response);
             document.getElementById('enter-name').style.display = 'none';
             document.getElementById('player-name').innerText = name;
             document.getElementById('play-form').hidden = false;
@@ -33,7 +33,8 @@ function guessNumber() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            console.log(this.response);
+            document.getElementById('guess').value = '';
+            // console.log(this.response);
             let res = JSON.parse(this.response);
             if (res.win === true) {
                 let notice = document.createElement('div');
@@ -41,7 +42,7 @@ function guessNumber() {
                 notice.innerText = 'Поздравления! Познахте числото ' + number + ' с ' + res.tries + ' опита.';
                 document.getElementById('results').prepend(notice);
                 document.getElementById('play-form').hidden = true;
-                getTopLists();
+                getActiveTopList();
             }
             else {
                 let par = document.createElement('p');
@@ -107,44 +108,55 @@ function editName(submit = false) {
     }
 }
 
-function getTopLists() {
-    getTopTries();
-    getTopTimes();
-}
-
-function getTopTries() {
-    let ol = document.getElementById('top-tries-list');
-    ol.innerHTML = '';
+function getTop(category) {
+    let tbody = document.getElementById('top-tbody');
+    tbody.innerHTML = '';
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             let res = JSON.parse(this.response);
+            let i = 1;
             for (let item of res) {
-                let li = document.createElement('li');
-                li.innerText = item.name + ' - ' + item.tries;
-                ol.append(li);
-            }
-        }
-    }
-    xhttp.open('GET', 'get-top/tries');
-    xhttp.send();
-}
-
-function getTopTimes() {
-    let ol = document.getElementById('top-times-list');
-    ol.innerHTML = '';
-    let xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function () {
-        if (this.readyState === 4 && this.status === 200) {
-            let res = JSON.parse(this.response);
-            for (let item of res) {
-                let li = document.createElement('li');
                 let time = new Date(parseInt(item.time)).toISOString().slice(11,19);
-                li.innerText = item.name + ' - ' + time;
-                ol.append(li);
+                let tr = document.createElement('tr');
+                let td0 = document.createElement('td');
+                let td1 = document.createElement('td');
+                let td2 = document.createElement('td');
+                let td3 = document.createElement('td');
+                td0.innerText = i.toString();
+                td1.innerText = item.name;
+                td2.innerText = item.tries;
+                td3.innerText = time;
+                tr.append(td0, td1, td2, td3);
+                tbody.append(tr);
+                i++;
             }
         }
     }
-    xhttp.open('GET', 'get-top/times');
+    xhttp.open('GET', 'get-top/' + category);
     xhttp.send();
+}
+
+function changeTab(category) {
+    switch (category) {
+        case 'tries':
+            document.getElementById('top-times-link').classList.remove('active');
+            document.getElementById('top-tries-link').classList.add('active');
+            getTop('tries');
+            break;
+        case 'times':
+            document.getElementById('top-tries-link').classList.remove('active');
+            document.getElementById('top-times-link').classList.add('active');
+            getTop('times');
+            break;
+    }
+}
+
+function getActiveTopList() {
+    if (document.getElementById('top-times-link').classList.contains('active')) {
+        getTop('times');
+    }
+    else {
+        getTop('tries');
+    }
 }

@@ -32,10 +32,13 @@
     <script type="text/javascript" src="/js/game.js"></script>
 {{--    <script src="{{asset('public/js/app.js')}}"></script>--}}
 </head>
-<body onload="getTopLists()">
+<body onload="getTop('tries')">
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid justify-content-between">
-        <span class="navbar-brand">Бикове и крави</span>
+        <span class="navbar-brand">
+            <img src="bullcowkiss.gif" width="100px">
+            Бикове и крави
+        </span>
         <button class="btn btn-outline-primary me-2" type="button" onclick="newGame()">Нова игра</button>
         <span class="navbar-brand">
             <i class="fas fa-user-secret"></i>
@@ -67,20 +70,29 @@
             <div id="results" class="card-text"></div>
         </div>
     </div>
-    <div style="display: flex; flex-direction: column">
-        <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">Класиране по брой опити:</div>
-            <div class="card-body">
-                <h5 class="card-title">Топ 10</h5>
-                <ol class="card-text" id="top-tries-list"></ol>
-            </div>
-        </div>
-        <div class="card text-dark bg-light mb-3" style="max-width: 18rem;">
-            <div class="card-header">Класиране по време:</div>
-            <div class="card-body">
-                <h5 class="card-title">Топ 10</h5>
-                <ol class="card-text" id="top-times-list"></ol>
-            </div>
+    <div class="card text-dark bg-light mb-3">
+        <div class="card-body">
+            <h5 class="card-title">Топ 10</h5>
+            <ul class="nav nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link active" id="top-tries-link" href="#" onclick="changeTab('tries')">по брой опити</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="top-times-link" onclick="changeTab('times')">по време</a>
+                </li>
+            </ul>
+            <table class="table table-sm">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Име</th>
+                    <th scope="col">Опити</th>
+                    <th scope="col">Време</th>
+                </tr>
+                </thead>
+                <tbody id="top-tbody">
+                </tbody>
+            </table>
         </div>
     </div>
 </main>

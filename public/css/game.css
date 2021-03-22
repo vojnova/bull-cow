@@ -5,3 +5,7 @@ main {
 #enter-name, #play {
     margin: auto;
 }
+
+body {
+    background-image: url("bullcow-background-fadeout.jpg");
+}
