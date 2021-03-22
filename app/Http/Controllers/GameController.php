@@ -98,8 +98,10 @@ class GameController extends Controller
             $record = new \stdClass();
             $record->name = session('name');
             $record->tries = session('tries');
-//            $record = ['name' => session('name'), 'tries' => session('tries')];
-            $this->generateTop10($record);
+            if ($_GET['time']) {
+                $record->time = $_GET['time'];
+            }
+            $this->addTop10($record);
             return response(['win' => true, 'tries' => session('tries')]);
         }
         $bulls = 0;
@@ -136,8 +138,17 @@ class GameController extends Controller
         return response('Не може да оставите името празно!', 400);
     }
 
-    private function generateTop10($current) {
-        $json = file_get_contents('top-tries.json');
+    private function addTop10($current) {
+        if ($current->tries) {
+            $this->generateTop10('top-tries.json', 'tries', $current);
+        }
+        if ($current->time) {
+            $this->generateTop10('top-times.json', 'time', $current);
+        }
+    }
+
+    private function generateTop10($filename, $keyname, $current) {
+        $json = file_get_contents($filename);
         $data = json_decode($json);
         if (!$data) {
             $data = [];
@@ -151,14 +162,14 @@ class GameController extends Controller
                 $data[] = $current;
                 $lastIndex++;
             }
-            elseif ($data[$lastIndex]->tries > $current->tries) {
+            elseif ($data[$lastIndex]->$keyname > $current->$keyname) {
                 $data[$lastIndex] = $current;
             }
             else {
                 return;
             }
             for ($i = $lastIndex - 1; $i >= 0; $i--) {
-                if ($data[$i]->tries > $current->tries) {
+                if ($data[$i]->$keyname > $current->$keyname) {
                     $temp = $data[$i];
                     $data[$i] = $current;
                     $data[$i + 1] = $temp;
@@ -166,13 +177,16 @@ class GameController extends Controller
             }
         }
         $json = json_encode($data);
-        file_put_contents('top-tries.json', $json);
+        file_put_contents($filename, $json);
     }
 
     public function getTop($category) {
         switch ($category) {
             case 'tries':
                 $json = file_get_contents('top-tries.json');
+                break;
+            case 'times':
+                $json = file_get_contents('top-times.json');
                 break;
             default:
                 $json = '';

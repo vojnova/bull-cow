@@ -1,4 +1,5 @@
 let token = document.querySelector('meta[name="csrf-token"]').content;
+let startTime = null;
 
 function newGame() {
     let name = document.getElementById('name-input').value;
@@ -14,6 +15,7 @@ function newGame() {
             document.getElementById('guess').value = '';
             document.getElementById('results').innerHTML = '';
             document.getElementById('play').style.display = 'block';
+            startTime = Date.now();
         }
         if (this.readyState === 4 && this.status > 200) {
             alert(this.responseText);
@@ -26,6 +28,7 @@ function newGame() {
 }
 
 function guessNumber() {
+    let guessTime = Date.now() - startTime;
     let number = document.getElementById('guess').value;
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -52,7 +55,7 @@ function guessNumber() {
             document.getElementById('guess').value = '';
         }
     }
-    xhttp.open('GET', 'check/' + number);
+    xhttp.open('GET', 'check/' + number + '?time=' + guessTime);
     xhttp.send();
 }
 
@@ -106,6 +109,7 @@ function editName(submit = false) {
 
 function getTopLists() {
     getTopTries();
+    getTopTimes();
 }
 
 function getTopTries() {
@@ -123,5 +127,24 @@ function getTopTries() {
         }
     }
     xhttp.open('GET', 'get-top/tries');
+    xhttp.send();
+}
+
+function getTopTimes() {
+    let ol = document.getElementById('top-times-list');
+    ol.innerHTML = '';
+    let xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState === 4 && this.status === 200) {
+            let res = JSON.parse(this.response);
+            for (let item of res) {
+                let li = document.createElement('li');
+                let time = new Date(parseInt(item.time)).toISOString().slice(11,19);
+                li.innerText = item.name + ' - ' + time;
+                ol.append(li);
+            }
+        }
+    }
+    xhttp.open('GET', 'get-top/times');
     xhttp.send();
 }

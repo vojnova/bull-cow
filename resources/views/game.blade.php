@@ -79,7 +79,7 @@
             <div class="card-header">Класиране по време:</div>
             <div class="card-body">
                 <h5 class="card-title">Топ 10</h5>
-                <ol class="card-text" id="top-time-list"></ol>
+                <ol class="card-text" id="top-times-list"></ol>
             </div>
         </div>
     </div>
