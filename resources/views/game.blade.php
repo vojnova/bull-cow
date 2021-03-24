@@ -27,14 +27,14 @@
         type="text/javascript"
         src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
     ></script>
-    <link rel="stylesheet" href="/css/game.css">
-    <script type="text/javascript" src="/js/game.js"></script>
+    <link rel="stylesheet" href="{{asset('/css/game.css')}}">
+    <script type="text/javascript" src="{{asset('/js/game.js')}}"></script>
 </head>
 <body onload="getTop('tries')">
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid justify-content-between">
         <span class="navbar-brand">
-            <a href="/game"><img src="bullcowkiss.gif" width="100px"></a>
+            <a href="/game"><img src="{{asset('bullcowkiss.gif')}}" width="100px"></a>
             <span>Бикове и крави</span>
         </span>
         <button class="btn btn-outline-primary me-2" type="button" onclick="newGame()">Нова игра</button>
