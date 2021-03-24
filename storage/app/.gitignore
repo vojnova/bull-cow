@@ -1,3 +1,5 @@
 *
 !public/
 !.gitignore
+!top-tries.json
+!top-times.json

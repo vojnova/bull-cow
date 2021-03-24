@@ -28,18 +28,31 @@
         src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
     ></script>
     <link rel="stylesheet" href="/css/game.css">
-    <script type="text/javascript" src="/js/app.js"></script>
     <script type="text/javascript" src="/js/game.js"></script>
-{{--    <script src="{{asset('public/js/app.js')}}"></script>--}}
 </head>
 <body onload="getTop('tries')">
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid justify-content-between">
         <span class="navbar-brand">
-            <img src="bullcowkiss.gif" width="100px">
-            Бикове и крави
+            <a href="/game"><img src="bullcowkiss.gif" width="100px"></a>
+            <span>Бикове и крави</span>
         </span>
         <button class="btn btn-outline-primary me-2" type="button" onclick="newGame()">Нова игра</button>
+        <button
+            id="popover"
+            type="button"
+            class="btn btn-outline-secondary me-2"
+            data-mdb-toggle="popover"
+            title="Как се играе?"
+            data-mdb-content="Бикове и крави е традиционна игра, в която трябва да бъде позната намислена комбинация от цифри.
+            Програмата генерира комбинация от 4 уникални цифри (една и съща цифра не може да се среща повече от веднъж, комбинацията може да започва с 0). След като започнете играта, трябва да въведете своето предположение и ще получите резултат под формата на брой бикове и брой крави.
+            Един бик означава, че е позната една цифра и тя е поставена на точното си място; Крава обозначава, че цифрата присъства в комбинацията, но не е поставена на правилното място.
+            Играта приключва, когато познаете точно генерираната комбинация, което се равнява на 4 бика.
+            Ако решите да се откажете, можете да изберете Предавам се, при което ще видите коя е била генерираната комбинация.
+            Приятна игра!"
+        >
+            Правила
+        </button>
         <span class="navbar-brand">
             <i class="fas fa-user-secret"></i>
             <span style="cursor: pointer" id="player-name" onclick="editName()">{{session('name')}}</span>
@@ -61,9 +74,9 @@
     </div>
     <div class="card w-50" id="play" style="display: none">
         <div class="card-body">
-            <h3 class="card-title">Опитайте се да познаете числото, като въведете 4 уникални цифри:</h3>
+            <h3 class="card-title">Опитайте се да познаете комбинацията, като въведете 4 уникални цифри:</h3>
             <form class="input-group mb-3" onsubmit="event.preventDefault(); guessNumber()" id="play-form">
-                <input class="form-control" type="text" maxlength="4" pattern="^(?:([0-9])(?!.*\1)){4}$" id="guess" required>
+                <input class="form-control" type="text" maxlength="4" pattern="^(?:([0-9])(?!.*\1)){4}$" id="guess" required autocomplete="off">
                 <button class="btn btn-success" type="submit">Познай</button>
                 <button class="btn btn-danger" type="button" onclick="giveUp()">Предавам се</button>
             </form>
@@ -96,5 +109,9 @@
         </div>
     </div>
 </main>
+
+<script>
+    const popover = new mdb.Popover(document.getElementById('popover'));
+</script>
 </body>
 </html>

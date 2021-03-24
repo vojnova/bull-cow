@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class GameController extends Controller
 {
@@ -102,7 +103,7 @@ class GameController extends Controller
                 $record->time = $_GET['time'];
             }
             $this->addTop10($record);
-            return response(['win' => true, 'tries' => session('tries')]);
+            return response(['win' => true, 'tries' => session('tries'), 'time' => $_GET['time']]);
         }
         $bulls = 0;
         $cows = 0;
@@ -148,7 +149,7 @@ class GameController extends Controller
     }
 
     private function generateTop10($filename, $keyname, $current) {
-        $json = file_get_contents($filename);
+        $json = Storage::get($filename);
         $data = json_decode($json);
         if (!$data) {
             $data = [];
@@ -177,16 +178,16 @@ class GameController extends Controller
             }
         }
         $json = json_encode($data);
-        file_put_contents($filename, $json);
+        Storage::put($filename, $json);
     }
 
     public function getTop($category) {
         switch ($category) {
             case 'tries':
-                $json = file_get_contents('top-tries.json');
+                $json = Storage::get('top-tries.json');
                 break;
             case 'times':
-                $json = file_get_contents('top-times.json');
+                $json = Storage::get('top-times.json');
                 break;
             default:
                 $json = '';

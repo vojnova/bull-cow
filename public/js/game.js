@@ -8,7 +8,6 @@ function newGame() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
-            // console.log(this.response);
             document.getElementById('enter-name').style.display = 'none';
             document.getElementById('player-name').innerText = name;
             document.getElementById('play-form').hidden = false;
@@ -34,12 +33,12 @@ function guessNumber() {
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
             document.getElementById('guess').value = '';
-            // console.log(this.response);
             let res = JSON.parse(this.response);
             if (res.win === true) {
                 let notice = document.createElement('div');
                 notice.classList.add('alert', 'alert-success');
-                notice.innerText = 'Поздравления! Познахте числото ' + number + ' с ' + res.tries + ' опита.';
+                let time = new Date(parseInt(res.time)).toISOString().slice(11,19);
+                notice.innerText = 'Поздравления! Познахте комбинацията ' + number + ' с ' + res.tries + ' опита за време ' + time + '.';
                 document.getElementById('results').prepend(notice);
                 document.getElementById('play-form').hidden = true;
                 getActiveTopList();
@@ -67,7 +66,7 @@ function giveUp() {
             let number = this.responseText;
             let notice = document.createElement('div');
             notice.classList.add('alert', 'alert-danger');
-            notice.innerText = 'Не успяхте да познаете числото ' + number + '.';
+            notice.innerText = 'Не успяхте да познаете комбинацията ' + number + '.';
             document.getElementById('results').prepend(notice);
             document.getElementById('play-form').hidden = true;
         }

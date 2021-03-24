@@ -1,5 +1,7 @@
 main {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 #enter-name, #play {
@@ -8,4 +10,15 @@ main {
 
 body {
     background-image: url("bullcow-background-fadeout.jpg");
+}
+
+.popover {
+    white-space: pre-line;
+}
+
+.card {
+    min-width: min-content;
+    max-width: max-content;
+    flex-grow: 1;
+    margin: 50px;
 }
