@@ -8,6 +8,7 @@ function newGame() {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (this.readyState === 4 && this.status === 200) {
+            document.getElementById('name-input').value = '';
             document.getElementById('enter-name').style.display = 'none';
             document.getElementById('player-name').innerText = name;
             document.getElementById('play-form').hidden = false;
