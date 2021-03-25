@@ -141,14 +141,14 @@ class GameController extends Controller
 
     private function addTop10($current) {
         if ($current->tries) {
-            $this->generateTop10('top-tries.json', 'tries', $current);
+            $this->generateTop10('top-tries.json', 'tries', 'time', $current);
         }
         if ($current->time) {
-            $this->generateTop10('top-times.json', 'time', $current);
+            $this->generateTop10('top-times.json', 'time', 'tries', $current);
         }
     }
 
-    private function generateTop10($filename, $keyname, $current) {
+    private function generateTop10($filename, $keyname1, $keyname2, $current) {
         $json = Storage::get($filename);
         $data = json_decode($json);
         if (!$data) {
@@ -163,14 +163,16 @@ class GameController extends Controller
                 $data[] = $current;
                 $lastIndex++;
             }
-            elseif ($data[$lastIndex]->$keyname > $current->$keyname) {
+            elseif ($data[$lastIndex]->$keyname1 > $current->$keyname1 ||
+                ($data[$lastIndex]->$keyname1 == $current->$keyname1 && $data[$lastIndex]->$keyname2 > $current->$keyname2)) {
                 $data[$lastIndex] = $current;
             }
             else {
                 return;
             }
             for ($i = $lastIndex - 1; $i >= 0; $i--) {
-                if ($data[$i]->$keyname > $current->$keyname) {
+                if ($data[$i]->$keyname1 > $current->$keyname1 ||
+                    ($data[$i]->$keyname1 == $current->$keyname1 && $data[$i]->$keyname2 > $current->$keyname2)) {
                     $temp = $data[$i];
                     $data[$i] = $current;
                     $data[$i + 1] = $temp;
