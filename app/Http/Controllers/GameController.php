@@ -29,7 +29,7 @@ class GameController extends Controller
             $arr[$str[$rand]] = $i;
             $str = str_replace($str[$rand], '', $str);
         }
-        $this->applyCustomRules($number, $arr);
+        //$this->applyCustomRules($number, $arr);
         session(['number' => $number, 'arr' => $arr, 'tries' => 0]);
     }
 
@@ -103,6 +103,10 @@ class GameController extends Controller
                 $record->time = $_GET['time'];
             }
             $this->addTop10($record);
+            error_log( date("[d-m-Y H:i:s e] ", time()) .
+                session('name') . ' позна комбинацията ' . session('number') .
+                '. Опити: ' . session('tries') . ', време: ' . date("H:i:s", $_GET['time'] / 1000) . PHP_EOL,
+            3, 'win.log');
             return response(['win' => true, 'tries' => session('tries'), 'time' => $_GET['time']]);
         }
         $bulls = 0;

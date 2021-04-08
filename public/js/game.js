@@ -39,7 +39,7 @@ function guessNumber() {
                 let notice = document.createElement('div');
                 notice.classList.add('alert', 'alert-success');
                 let time = new Date(parseInt(res.time)).toISOString().slice(11,19);
-                notice.innerText = 'Поздравления! Познахте комбинацията ' + number + ' с ' + res.tries + ' опита за време ' + time + '.';
+                notice.innerText = 'Поздравления! Познахте комбинацията ' + number + '. Опити: ' + res.tries + ', време: ' + time + '.';
                 document.getElementById('results').prepend(notice);
                 document.getElementById('play-form').hidden = true;
                 getActiveTopList();
