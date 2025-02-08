@@ -126,7 +126,7 @@ function getTop(category) {
                 td0.innerText = i.toString();
                 td1.innerText = item.name;
                 td2.innerText = item.tries;
-                td3.innerText = time;
+                td3.innerText = item.time;
                 tr.append(td0, td1, td2, td3);
                 tbody.append(tr);
                 i++;
@@ -138,25 +138,31 @@ function getTop(category) {
 }
 
 function changeTab(category) {
+    document.getElementById('top-tries-link').classList.remove('active');
+    document.getElementById('top-times-link').classList.remove('active');
+    document.getElementById('top-last-link').classList.remove('active');
     switch (category) {
         case 'tries':
-            document.getElementById('top-times-link').classList.remove('active');
             document.getElementById('top-tries-link').classList.add('active');
-            getTop('tries');
             break;
         case 'times':
-            document.getElementById('top-tries-link').classList.remove('active');
             document.getElementById('top-times-link').classList.add('active');
-            getTop('times');
+            break;
+        case 'last':
+            document.getElementById('top-last-link').classList.add('active');
             break;
     }
+    getTop(category);
 }
 
 function getActiveTopList() {
     if (document.getElementById('top-times-link').classList.contains('active')) {
         getTop('times');
+        return;
     }
-    else {
+    if (document.getElementById('top-tries-link').classList.contains('active')) {
         getTop('tries');
+        return;
     }
+    getTop('last');
 }

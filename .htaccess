@@ -1,0 +1,8 @@
+RewriteEngine on
+
+RewriteEngine On
+RewriteBase /aNn/bull-cow/
+
+RewriteCond %{REQUEST_URI} !/public/
+RewriteRule (.*) public/index.php/$1 [R=301,L]
+RewriteRule ^$ public [L]

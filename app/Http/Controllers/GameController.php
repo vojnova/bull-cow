@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\History;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -102,11 +103,18 @@ class GameController extends Controller
             if ($_GET['time']) {
                 $record->time = $_GET['time'];
             }
-            $this->addTop10($record);
+//            $this->addTop10($record);
+            $time = date("H:i:s", $_GET['time'] / 1000);
             error_log( date("[d-m-Y H:i:s e] ", time()) .
                 session('name') . ' позна комбинацията ' . session('number') .
-                '. Опити: ' . session('tries') . ', време: ' . date("H:i:s", $_GET['time'] / 1000) . PHP_EOL,
+                '. Опити: ' . session('tries') . ', време: ' . $time . PHP_EOL,
             3, 'win.log');
+
+            $date = new \DateTime();
+            $timezone = new \DateTimeZone('Europe/Sofia');
+            $date->setTimezone($timezone);
+            $date = $date->format('Y-m-d H:i:s');
+            $this->addRecordToHistory($date, session('name'), session('number'), session('tries'), $time);
             return response(['win' => true, 'tries' => session('tries'), 'time' => $_GET['time']]);
         }
         $bulls = 0;
@@ -190,14 +198,63 @@ class GameController extends Controller
     public function getTop($category) {
         switch ($category) {
             case 'tries':
-                $json = Storage::get('top-tries.json');
+//                $json = Storage::get('top-tries.json');
+                $list = History::orderBy('tries', 'asc')->orderBy('time', 'asc')->limit(10)->get();
+                $json = json_encode($list);
                 break;
             case 'times':
-                $json = Storage::get('top-times.json');
+//                $json = Storage::get('top-times.json');
+                $list = History::orderBy('time', 'asc')->orderBy('tries', 'asc')->limit(10)->get();
+                $json = json_encode($list);
+                break;
+            case 'last':
+                $list = History::orderBy('date', 'desc')->limit(10)->get();
+                $json = json_encode($list);
                 break;
             default:
                 $json = '';
         }
         return $json;
+    }
+
+    public function addLogToDatabase() {
+//        $log = file_get_contents('win.log');
+        $log = fopen("win.log", "r");
+        if ($log) {
+            while (($line = fgets($log)) !== false) {
+                // process the line read.
+                preg_match('/\[(.*)\]/', $line, $date);
+                $date = $date[1];
+                preg_match('/\] (.*) позна/', $line, $name);
+                $name = $name[1];
+                preg_match('/комбинацията (\d{4})./', $line, $number);
+                $number = $number[1];
+                preg_match('/Опити: (\d+)/', $line, $tries);
+                $tries = $tries[1];
+                preg_match('/време: (\d{2}:\d{2}:\d{2})/', $line, $time);
+                $time = $time[1];
+                echo "DATE: $date, NAME: $name, NUMBER: $number, TRIES: $tries, TIME: $time. \n";
+                $date = \DateTime::createFromFormat('d-m-Y H:i:s e', $date);
+                $timezone = new \DateTimeZone('Europe/Sofia');
+                $date->setTimezone($timezone);
+                echo "NEW DATE: " . $date->format('Y-m-d H:i:s') . PHP_EOL;
+                $this->addRecordToHistory($date, $name, $number, $tries, $time);
+            }
+
+            fclose($log);
+        } else {
+            // error opening the file.
+            echo "Error opening file win.log!";
+        }
+    }
+
+    private function addRecordToHistory($date, $name, $number, $tries, $time) {
+        History::firstOrCreate([
+            'date' => $date,
+            'name' => $name,
+            'number' => $number,
+            'tries' => $tries,
+            'time' => $time
+        ]);
     }
 }

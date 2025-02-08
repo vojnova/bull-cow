@@ -34,7 +34,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid justify-content-between">
         <span class="navbar-brand">
-            <a href="/game"><img src="{{asset('bullcowkiss.gif')}}" width="100px"></a>
+            <a href="{{url('/game')}}"><img src="{{asset('bullcowkiss.gif')}}" width="100px"></a>
             <span>Бикове и крави</span>
         </span>
         <button class="btn btn-outline-primary me-2" type="button" onclick="newGame()">Нова игра</button>
@@ -74,7 +74,7 @@
     </div>
     <div class="card w-50" id="play" style="display: none">
         <div class="card-body">
-            <h3 class="card-title">Опитайте се да познаете комбинацията, като въведете 4 уникални цифри:</h3>
+            <h3 class="card-title">Опитайте се да познаете комбинацията, като въведете 4 различни цифри:</h3>
             <form class="input-group mb-3" onsubmit="event.preventDefault(); guessNumber()" id="play-form">
                 <input class="form-control" type="text" maxlength="4" pattern="^(?:([0-9])(?!.*\1)){4}$" id="guess" required autocomplete="off">
                 <button class="btn btn-success" type="submit">Познай</button>
@@ -92,6 +92,9 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="top-times-link" onclick="changeTab('times')">по време</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="top-last-link" onclick="changeTab('last')">най-скорошни</a>
                 </li>
             </ul>
             <table class="table table-sm">
