@@ -30,7 +30,7 @@
     <link rel="stylesheet" href="{{asset('/css/game.css')}}">
     <script type="text/javascript" src="{{asset('/js/game.js')}}"></script>
 </head>
-<body onload="getTop('tries')">
+<body onload="getTop('last')">
 <nav class="navbar navbar-light bg-light">
     <div class="container-fluid justify-content-between">
         <span class="navbar-brand">
@@ -88,13 +88,13 @@
             <h5 class="card-title">Топ 10</h5>
             <ul class="nav nav-pills nav-fill">
                 <li class="nav-item">
-                    <a class="nav-link active" id="top-tries-link" href="#" onclick="changeTab('tries')">по брой опити</a>
+                    <a class="nav-link" id="top-tries-link" href="#" onclick="changeTab('tries')">по брой опити</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#" id="top-times-link" onclick="changeTab('times')">по време</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="top-last-link" onclick="changeTab('last')">най-скорошни</a>
+                    <a class="nav-link active" href="#" id="top-last-link" onclick="changeTab('last')">най-скорошни</a>
                 </li>
             </ul>
             <table class="table table-sm">
